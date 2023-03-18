@@ -25,5 +25,5 @@ extension WebServiceProtocol{
 }
 
 public struct WebService:WebServiceProtocol{
-
+    public init(){}
 }
