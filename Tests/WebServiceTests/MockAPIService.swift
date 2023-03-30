@@ -9,7 +9,6 @@ import Foundation
 @testable import WebService
 
 final class MockAPIService {
-
     private var apiClient: WebServiceProtocol
     private var url = "https://binarysid.github.io/profile/api/carlist.json"
 
@@ -35,11 +34,9 @@ final class MockAPIService {
             throw NetworkError.invalidJson
         }
     }
-
 }
 
 extension MockAPIService {
-
     private func getURLRequest(baseURL: String, queryParams: [String: String]? = nil, headers: [String: String]? = nil) -> URLRequest? {
         guard var urlComponents = URLComponents(string: baseURL) else {
             return nil
@@ -62,5 +59,4 @@ extension MockAPIService {
         }
         return request
     }
-
 }

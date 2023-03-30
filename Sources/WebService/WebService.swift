@@ -15,7 +15,6 @@ public protocol WebServiceProtocol {
 
 // default implementation
 extension WebServiceProtocol {
-
     public func getData(for request: URLRequest) async throws -> (Data, URLResponse) {
         do {
             let result = try await URLSession.shared.data(for: request)
@@ -33,7 +32,6 @@ extension WebServiceProtocol {
             throw error
         }
     }
-
 }
 
 public struct WebService: WebServiceProtocol {

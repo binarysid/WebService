@@ -2,7 +2,6 @@ import XCTest
 @testable import WebService
 
 final class WebServiceTests: XCTestCase {
-
     private var service: MockAPIService!
     private var expectation: XCTestExpectation!
 
@@ -27,5 +26,4 @@ final class WebServiceTests: XCTestCase {
         service = nil
         expectation = nil
     }
-
 }
