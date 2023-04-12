@@ -2,11 +2,11 @@ import XCTest
 @testable import WebService
 
 final class WebServiceTests: XCTestCase {
-    private var service: MockAPIService!
+    private var service: MockAPIClient!
     private var expectation: XCTestExpectation!
 
     override func setUp() {
-        service = MockAPIService(apiClient: WebService())
+        service = MockAPIClient(apiClient: MockWebService())
         expectation = expectation(description: "\(Self.description()) expecatation")
     }
 

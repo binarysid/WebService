@@ -8,11 +8,11 @@
 import Foundation
 @testable import WebService
 
-final class MockAPIService {
-    private var apiClient: WebServiceProtocol
+final class MockAPIClient {
+    private var apiClient: WebService
     private var url = "https://binarysid.github.io/profile/api/carlist.json"
 
-    init(apiClient: WebServiceProtocol) {
+    init(apiClient: WebService) {
         self.apiClient = apiClient
     }
 
@@ -36,7 +36,7 @@ final class MockAPIService {
     }
 }
 
-extension MockAPIService {
+extension MockAPIClient {
     private func getURLRequest(baseURL: String, queryParams: [String: String]? = nil, headers: [String: String]? = nil) -> URLRequest? {
         guard var urlComponents = URLComponents(string: baseURL) else {
             return nil
