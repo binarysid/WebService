@@ -9,13 +9,13 @@ import Foundation
 
 // Generic Client that can be utilized by all the classes/structs that need to fetch data from remote location
 public protocol WebServiceProtocol {
-    func getData(for request: URLRequest) async throws -> (Data, URLResponse)
-    func getDecodedModel<T: Decodable>(from data: Data, to type: T.Type) throws -> T
+    func fetch(_ request: URLRequest) async throws -> (Data, URLResponse)
+    func decode<T: Decodable>(type: T.Type, from data: Data) throws -> T
 }
 
 // default implementation
 extension WebServiceProtocol {
-    public func getData(for request: URLRequest) async throws -> (Data, URLResponse) {
+    public func fetch(_ request: URLRequest) async throws -> (Data, URLResponse) {
         do {
             let result = try await URLSession.shared.data(for: request)
             return result
@@ -24,7 +24,7 @@ extension WebServiceProtocol {
         }
     }
 
-    public func getDecodedModel<T: Decodable>(from data: Data, to type: T.Type) throws -> T {
+    public func decode<T: Decodable>(type: T.Type, from data: Data) throws -> T {
         do {
             let userData = try JSONDecoder().decode(T.self, from: data)
             return userData

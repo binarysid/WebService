@@ -21,14 +21,14 @@ final class MockAPIService {
             guard let request = getURLRequest(baseURL: url) else {
                 throw NetworkError.badURL
             }
-            let (data, response) = try await apiClient.getData(for: request)
+            let (data, response) = try await apiClient.fetch(request)
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw NetworkError.invalidResponse
             }
             guard httpResponse.statusCode == 200 else {
                 throw NetworkError.serviceNotFound
             }
-            let userData = try apiClient.getDecodedModel(from: data, to: CarArticleData.self)
+            let userData = try apiClient.decode(type: CarArticleData.self, from: data)
             return userData
         } catch {
             throw NetworkError.invalidJson
