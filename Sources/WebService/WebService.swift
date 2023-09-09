@@ -16,20 +16,10 @@ public protocol WebService {
 // default implementation
 extension WebService {
     public func fetch(_ request: URLRequest) async throws -> (Data, URLResponse) {
-        do {
-            let result = try await URLSession.shared.data(for: request)
-            return result
-        } catch {
-            throw error
-        }
+        return try await URLSession.shared.data(for: request)
     }
 
     public func decode<T: Decodable>(type: T.Type, from data: Data) throws -> T {
-        do {
-            let userData = try JSONDecoder().decode(T.self, from: data)
-            return userData
-        } catch {
-            throw error
-        }
+        return try JSONDecoder().decode(T.self, from: data)
     }
 }

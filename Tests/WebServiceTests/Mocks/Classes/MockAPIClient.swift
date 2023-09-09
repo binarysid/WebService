@@ -8,27 +8,22 @@
 import Foundation
 @testable import WebService
 
-final class MockAPIClient {
-    private var apiClient: WebService
+final class MockAPIClient: WebService {
     private var url = "https://binarysid.github.io/profile/api/carlist.json"
-
-    init(apiClient: WebService) {
-        self.apiClient = apiClient
-    }
 
     func getTransactionList() async throws -> CarArticleData {
         do {
             guard let request = getURLRequest(baseURL: url) else {
                 throw NetworkError.badURL
             }
-            let (data, response) = try await apiClient.fetch(request)
+            let (data, response) = try await fetch(request)
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw NetworkError.invalidResponse
             }
             guard httpResponse.statusCode == 200 else {
                 throw NetworkError.serviceNotFound
             }
-            let userData = try apiClient.decode(type: CarArticleData.self, from: data)
+            let userData = try decode(type: CarArticleData.self, from: data)
             return userData
         } catch {
             throw NetworkError.invalidJson

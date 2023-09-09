@@ -3,11 +3,9 @@ import XCTest
 
 final class WebServiceTests: XCTestCase {
     private var service: MockAPIClient!
-    private var expectation: XCTestExpectation!
 
     override func setUp() {
-        service = MockAPIClient(apiClient: MockWebService())
-        expectation = expectation(description: "\(Self.description()) expecatation")
+        service = MockAPIClient()
     }
 
     func test_web_service() async {
@@ -15,8 +13,6 @@ final class WebServiceTests: XCTestCase {
             let result = try await service.getTransactionList()
             XCTAssert(result.status == "success", "failed to fetch result")
             XCTAssertTrue(result.content.count>0, "no list found")
-            expectation.fulfill()
-            await self.waitForExpectations(timeout: 4.0,handler: nil)
         } catch {
             XCTFail(error.localizedDescription)
         }
@@ -24,6 +20,5 @@ final class WebServiceTests: XCTestCase {
 
     override func tearDown() {
         service = nil
-        expectation = nil
     }
 }
