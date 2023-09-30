@@ -16,7 +16,6 @@ final class HTTPRequestInterceptor: URLProtocol, URLSessionDelegate {
             return false
         }
         
-//        print("Can init.......")
         guard let url = request.url, let scheme = url.scheme else {
             return false
         }
@@ -24,14 +23,25 @@ final class HTTPRequestInterceptor: URLProtocol, URLSessionDelegate {
         guard ["http", "https"].contains(scheme) else {
             return false
         }
-        return true // Intercept all requests for this example
+        return true
     }
 
     override class func canonicalRequest(for request: URLRequest) -> URLRequest {
-//        print("Canonical request.......")
         return request
     }
-    
+        
+    override func startLoading() {
+        let modifiedRequest = self.getModifiedRequest()
+        HTTPRequestInterceptor.interceptedRequests.insert(modifiedRequest)
+        self.sendHTTPRequest(modifiedRequest)
+       
+    }
+
+    override func stopLoading() {
+    }
+}
+
+extension HTTPRequestInterceptor {
     private func getModifiedRequest() -> URLRequest {
         var modifiedRequest = request
         HTTPRequestInterceptor.headers?.forEach {
@@ -45,7 +55,6 @@ final class HTTPRequestInterceptor: URLProtocol, URLSessionDelegate {
     private func sendHTTPRequest(_ request: URLRequest) {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             HTTPRequestInterceptor.interceptedRequests.remove(request)
-            // Handle the response and data here
             if let data = data {
                 self.client?.urlProtocol(self, didLoad: data)
             }
@@ -62,16 +71,5 @@ final class HTTPRequestInterceptor: URLProtocol, URLSessionDelegate {
         }
         task.resume()
     }
-    
-    override func startLoading() {
-//        print("start loading.......")
-        let modifiedRequest = self.getModifiedRequest()
-        HTTPRequestInterceptor.interceptedRequests.insert(modifiedRequest)
-        self.sendHTTPRequest(modifiedRequest)
-       
-    }
 
-    override func stopLoading() {
-//        print("stop loading.......")
-    }
 }

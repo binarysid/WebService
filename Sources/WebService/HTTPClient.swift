@@ -8,10 +8,39 @@
 import Foundation
 
 public class HTTPClient {
-    static var networkMonitor = NetworkMonitor()
+    private var networkMonitor = NetworkMonitor()
+    static let shared = HTTPClient()
+    private var session: URLSession?
 
-    static func register(_ defaultHeaders: [String: String]? = nil) {
+    private init() {
+        setSession()
+    }
+
+    private func setSession() {
+        let sessionConfig = URLSessionConfiguration.ephemeral
+        sessionConfig.protocolClasses = [HTTPRequestInterceptor.self]
+        session =  URLSession(configuration: sessionConfig)
+    }
+
+    func register(_ defaultHeaders: [String: String]? = nil) {
         HTTPRequestInterceptor.headers = defaultHeaders
-        URLProtocol.registerClass(HTTPRequestInterceptor.self)
+    }
+}
+
+extension HTTPClient: WebService {
+    public func fetch(_ request: URLRequest) async throws -> (Data, URLResponse) {
+        guard let session else {
+            throw  HTTPServiceError.sessionNotConfigured
+        }
+
+        guard self.networkMonitor.isConnected else {
+            throw HTTPServiceError.noInternet
+        }
+        
+        return try await session.data(for: request)
+    }
+
+    public func decode<T: Decodable>(type: T.Type, from data: Data) throws -> T {
+        return try JSONDecoder().decode(T.self, from: data)
     }
 }

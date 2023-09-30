@@ -13,6 +13,7 @@ public enum HTTPServiceError: Error {
     case invalidResponse
     case invalidJson
     case noInternet
+    case sessionNotConfigured
 }
 
 extension HTTPServiceError: LocalizedError {
@@ -30,6 +31,8 @@ extension HTTPServiceError: LocalizedError {
             return "Invalid Response"
         case .noInternet:
             return "No Internet Connection"
+        case .sessionNotConfigured:
+            return "Session not configured"
         }
     }
 }
