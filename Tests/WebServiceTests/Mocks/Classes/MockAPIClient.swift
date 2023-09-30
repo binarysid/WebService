@@ -14,19 +14,19 @@ final class MockAPIClient: WebService {
     func getTransactionList() async throws -> CarArticleData {
         do {
             guard let request = getURLRequest(baseURL: url) else {
-                throw NetworkError.badURL
+                throw HTTPServiceError.badURL
             }
             let (data, response) = try await fetch(request)
             guard let httpResponse = response as? HTTPURLResponse else {
-                throw NetworkError.invalidResponse
+                throw HTTPServiceError.invalidResponse
             }
             guard httpResponse.statusCode == 200 else {
-                throw NetworkError.serviceNotFound
+                throw HTTPServiceError.serviceNotFound
             }
             let userData = try decode(type: CarArticleData.self, from: data)
             return userData
         } catch {
-            throw NetworkError.invalidJson
+            throw HTTPServiceError.invalidJson
         }
     }
 }
