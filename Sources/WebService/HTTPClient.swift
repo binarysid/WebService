@@ -9,7 +9,7 @@ import Foundation
 
 public class HTTPClient {
     private var networkMonitor = NetworkMonitor()
-    static let shared = HTTPClient()
+    public static let shared = HTTPClient()
     private var session: URLSession?
 
     private init() {
@@ -22,7 +22,7 @@ public class HTTPClient {
         session =  URLSession(configuration: sessionConfig)
     }
 
-    func register(_ defaultHeaders: [String: String]? = nil) {
+    public func register(_ defaultHeaders: [String: String]? = nil) {
         HTTPRequestInterceptor.headers = defaultHeaders
     }
 }
