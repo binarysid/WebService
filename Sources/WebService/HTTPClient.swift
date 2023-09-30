@@ -8,6 +8,8 @@
 import Foundation
 
 public class HTTPClient {
+    static var networkMonitor = NetworkMonitor()
+
     static func register(_ defaultHeaders: [String: String]? = nil) {
         HTTPRequestInterceptor.headers = defaultHeaders
         URLProtocol.registerClass(HTTPRequestInterceptor.self)

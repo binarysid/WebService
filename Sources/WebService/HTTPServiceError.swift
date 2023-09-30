@@ -4,6 +4,7 @@
 //
 //  Created by Linkon Sid on 30/3/23.
 //
+import Foundation
 
 public enum HTTPServiceError: Error {
     case serviceNotFound
@@ -12,4 +13,23 @@ public enum HTTPServiceError: Error {
     case invalidResponse
     case invalidJson
     case noInternet
+}
+
+extension HTTPServiceError: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .serviceNotFound:
+            return "Service Error"
+        case .badURL:
+            return "URL Error"
+        case .noDataFound:
+            return "No Data Found"
+        case .invalidResponse:
+            return "Invalid Response"
+        case .invalidJson:
+            return "Invalid Response"
+        case .noInternet:
+            return "No Internet Connection"
+        }
+    }
 }

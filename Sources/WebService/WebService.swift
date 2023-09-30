@@ -16,6 +16,9 @@ public protocol WebService {
 // default implementation
 extension WebService {
     public func fetch(_ request: URLRequest) async throws -> (Data, URLResponse) {
+        guard HTTPClient.networkMonitor.isConnected else {
+            throw HTTPServiceError.noInternet
+        }
         return try await URLSession.shared.data(for: request)
     }
 
