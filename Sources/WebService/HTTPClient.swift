@@ -13,10 +13,10 @@ public class HTTPClient {
     private var session: URLSession?
 
     private init() {
-        setSession()
+        createSession()
     }
 
-    private func setSession() {
+    private func createSession() {
         let sessionConfig = URLSessionConfiguration.ephemeral
         sessionConfig.protocolClasses = [HTTPRequestInterceptor.self]
         session =  URLSession(configuration: sessionConfig)
@@ -28,7 +28,7 @@ public class HTTPClient {
 }
 
 extension HTTPClient: WebService {
-    public func fetch(_ request: URLRequest) async throws -> (Data, URLResponse) {
+    public func send(_ request: URLRequest) async throws -> (Data, URLResponse) {
         guard let session else {
             throw  HTTPServiceError.sessionNotConfigured
         }
@@ -42,5 +42,10 @@ extension HTTPClient: WebService {
 
     public func decode<T: Decodable>(type: T.Type, from data: Data) throws -> T {
         return try JSONDecoder().decode(T.self, from: data)
+    }
+    
+    public func cancel() {
+        session?.invalidateAndCancel()
+        createSession()
     }
 }

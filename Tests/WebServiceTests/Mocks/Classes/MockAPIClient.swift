@@ -17,7 +17,7 @@ final class MockAPIClient {
             guard let request = getURLRequest(baseURL: url) else {
                 throw HTTPServiceError.badURL
             }
-            let (data, response) = try await httpClient.fetch(request)
+            let (data, response) = try await httpClient.send(request)
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw HTTPServiceError.invalidResponse
             }
