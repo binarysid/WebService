@@ -11,4 +11,5 @@ import Foundation
 public protocol WebService {
     func send(_ request: URLRequest) async throws -> (Data, URLResponse)
     func decode<T: Decodable>(type: T.Type, from data: Data) throws -> T
+    func decode<T: Decodable>(type: T.Type, from data: [String: Any]) throws -> T
 }

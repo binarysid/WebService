@@ -44,6 +44,11 @@ extension HTTPClient: WebService {
         return try JSONDecoder().decode(T.self, from: data)
     }
     
+    public func decode<T: Decodable>(type: T.Type, from data: [String: Any]) throws -> T {
+        let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
+        return try JSONDecoder().decode(T.self, from: jsonData)
+    }
+    
     public func cancel() {
         session?.invalidateAndCancel()
         createSession()
