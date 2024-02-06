@@ -1,27 +1,39 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Linkon Sid on 9/30/23.
 //
 
 import Foundation
 
-public class HTTPClient {
+public class HTTPClient: NSObject {
     private var networkMonitor = NetworkMonitor()
-    public static let shared = HTTPClient()
     private var session: URLSession?
-
-    private init() {
+    private let sessionConfig = URLSessionConfiguration.ephemeral
+    private var timeoutRequestInterval: Double?
+    private var timeoutResourceInterval: Double?
+    
+    public init(timeoutRequestInterval: Double? = nil, timeoutResourceInterval: Double? = nil) {
+        super.init()
+        self.timeoutRequestInterval = timeoutRequestInterval
+        self.timeoutResourceInterval = timeoutResourceInterval
         createSession()
     }
-
+    
     private func createSession() {
-        let sessionConfig = URLSessionConfiguration.ephemeral
+        if let timeoutRequestInterval {
+            sessionConfig.timeoutIntervalForRequest = timeoutRequestInterval
+        }
+        
+        if let timeoutResourceInterval {
+            sessionConfig.timeoutIntervalForResource = timeoutResourceInterval
+        }
+        
         sessionConfig.protocolClasses = [HTTPRequestInterceptor.self]
         session =  URLSession(configuration: sessionConfig)
     }
-
+    
     public func register(_ defaultHeaders: [String: String]? = nil) {
         HTTPRequestInterceptor.headers = defaultHeaders
     }
@@ -32,14 +44,22 @@ extension HTTPClient: WebService {
         guard let session else {
             throw  HTTPServiceError.sessionNotConfigured
         }
-
+        
         guard self.networkMonitor.isConnected else {
             throw HTTPServiceError.noInternet
         }
-        
-        return try await session.data(for: request)
+        do {
+            let responseData = try await session.data(for: request)
+            return responseData
+        } catch {
+            if let urlError = error as? URLError, urlError.code == .timedOut {
+                throw HTTPServiceError.timeout
+            } else {
+                throw error
+            }
+        }
     }
-
+    
     public func decode<T: Decodable>(type: T.Type, from data: Data) throws -> T {
         return try JSONDecoder().decode(T.self, from: data)
     }

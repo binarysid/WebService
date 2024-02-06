@@ -10,7 +10,7 @@ import Foundation
 
 final class MockAPIClient {
     private var url = "https://binarysid.github.io/profile/api/carlist.json"
-    private var httpClient = HTTPClient.shared
+    private var httpClient = HTTPClient(timeoutRequestInterval: 2.0)
 
     func getTransactionList() async throws -> CarArticleData {
         do {
@@ -27,7 +27,8 @@ final class MockAPIClient {
             let userData = try httpClient.decode(type: CarArticleData.self, from: data)
             return userData
         } catch {
-            throw HTTPServiceError.invalidJson
+            print("httpclient error: ", error.localizedDescription)
+            throw error
         }
     }
 }
