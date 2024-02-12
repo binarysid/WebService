@@ -16,6 +16,7 @@ public enum HTTPServiceError: Error {
     case sessionNotConfigured
     case cancelled
     case timeout
+    case unAuthorized
 }
 
 extension HTTPServiceError: LocalizedError {
@@ -39,6 +40,8 @@ extension HTTPServiceError: LocalizedError {
             return "Request Cancelled"
         case .timeout:
             return "Request Timeout"
+        case .unAuthorized:
+            return "Request Unauthorized"
         }
     }
 }
