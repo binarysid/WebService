@@ -48,6 +48,7 @@ extension HTTPClient: WebService {
         guard self.networkMonitor.isConnected else {
             throw HTTPServiceError.noInternet
         }
+        
         do {
             let responseData = try await session.data(for: request)
             return responseData

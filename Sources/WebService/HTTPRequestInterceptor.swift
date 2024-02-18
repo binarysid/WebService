@@ -53,8 +53,11 @@ extension HTTPRequestInterceptor {
     }
     
     private func sendHTTPRequest(_ request: URLRequest) {
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        let task = URLSession.shared.dataTask(with: request) {[weak self] data, response, error in
+            guard let self else { return }
+            
             HTTPRequestInterceptor.interceptedRequests.remove(request)
+            
             if let data = data {
                 self.client?.urlProtocol(self, didLoad: data)
             }
