@@ -40,6 +40,20 @@ public class HTTPClient: NSObject {
 }
 
 extension HTTPClient: WebService {
+    public func load<T>(_ request: URLRequest) async throws -> T where T: Codable {
+        let (data, response) = try await send(request)
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw HTTPServiceError.invalidResponse
+        }
+        
+        guard httpResponse.statusCode == 200 else {
+            throw HTTPServiceError.serviceNotFound
+        }
+        
+        let result = try decode(type: T.self, from: data)
+        return result
+    }
+    
     public func send(_ request: URLRequest) async throws -> (Data, URLResponse) {
         guard let session else {
             throw  HTTPServiceError.sessionNotConfigured

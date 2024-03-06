@@ -31,6 +31,18 @@ final class MockAPIClient {
             throw error
         }
     }
+    
+    func transactionList() async throws -> CarArticleData {
+        guard let request = getURLRequest(baseURL: url) else {
+            throw HTTPServiceError.badURL
+        }
+        do {
+            let carArticle: CarArticleData = try await httpClient.load(request)
+            return carArticle
+        } catch {
+            throw error
+        }
+    }
 }
 
 extension MockAPIClient {

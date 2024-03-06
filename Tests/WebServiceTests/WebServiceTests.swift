@@ -17,7 +17,16 @@ final class WebServiceTests: XCTestCase {
             XCTFail(error.localizedDescription)
         }
     }
-
+    
+    func test_web_service_with_load() async {
+        do {
+            let result = try await service.transactionList()
+            XCTAssert(result.status == "success", "failed to fetch result")
+            XCTAssertTrue(result.content.count > 0, "no list found")
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
     override func tearDown() {
         service = nil
     }
