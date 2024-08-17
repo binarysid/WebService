@@ -10,7 +10,7 @@ import Foundation
 
 final class MockAPIClient {
     private var url = "https://binarysid.github.io/profile/api/carlist.json"
-    private var httpClient = HTTPClient(timeoutRequestInterval: 2.0)
+    private var httpClient = HTTPClient(timeoutRequestInterval: 25.0)
 
     func getTransactionList() async throws -> CarArticleData {
         do {
@@ -24,6 +24,7 @@ final class MockAPIClient {
             guard httpResponse.statusCode == 200 else {
                 throw HTTPServiceError.serviceNotFound
             }
+            
             let userData = try httpClient.decode(type: CarArticleData.self, from: data)
             return userData
         } catch {
@@ -37,8 +38,26 @@ final class MockAPIClient {
             throw HTTPServiceError.badURL
         }
         do {
-            let carArticle: CarArticleData = try await httpClient.load(request)
+            let carArticle: CarArticleData = try await httpClient.execute(request: request)
             return carArticle
+        } catch {
+            throw error
+        }
+    }
+    
+    func postTransaction() async throws -> Post {
+        let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250YWN0X25vIjoiMDE5NDYwOTQzNDIiLCJleHBpcmVzIjoxNzIzOTM5MTk5Ljk5OTk5OX0._7QSeBGQnEbwbHnEsklovO4KbzmpGFbgcfsihYcT_Io"
+        guard let request = URLRequestBuilder().createRequestWith(
+            baseURL: "https://startrek.v2.ltd/grammar-checker",
+            httpMethod: .POST,
+            body: ["content": "startrek grammer cheker"],
+            bearerToken: token
+        ) else {
+            throw HTTPServiceError.badURL
+        }
+        do {
+            let postCont: Post = try await httpClient.execute(request: request)
+            return postCont
         } catch {
             throw error
         }

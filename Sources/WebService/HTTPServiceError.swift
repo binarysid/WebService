@@ -17,6 +17,7 @@ public enum HTTPServiceError: Error {
     case cancelled
     case timeout
     case unAuthorized
+    case jsonDecoding
 }
 
 extension HTTPServiceError: LocalizedError {
@@ -42,6 +43,8 @@ extension HTTPServiceError: LocalizedError {
             return "Request Timeout"
         case .unAuthorized:
             return "Request Unauthorized"
+        case .jsonDecoding:
+            return "Json Decoding error"
         }
     }
 }

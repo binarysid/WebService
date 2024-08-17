@@ -8,6 +8,16 @@ final class WebServiceTests: XCTestCase {
         service = MockAPIClient()
     }
 
+    func test_post_request() async throws {
+        do {
+            let result = try await service.postTransaction()
+            XCTAssert(result.message == "Successful")
+            XCTAssertFalse(result.data.result.isEmpty)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+    
     func test_web_service() async {
         do {
             let result = try await service.getTransactionList()
