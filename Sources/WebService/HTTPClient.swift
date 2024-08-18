@@ -40,7 +40,7 @@ public class HTTPClient: NSObject {
 }
 
 extension HTTPClient: WebService {
-    public func execute<T>(request: URLRequest) async throws -> T where T: Codable {
+    public func execute<T>(request: URLRequest) async throws -> (T, Int) where T: Codable {
         let (data, response) = try await send(request)
         guard let httpResponse = response as? HTTPURLResponse else {
             throw HTTPServiceError.invalidResponse
@@ -52,7 +52,7 @@ extension HTTPClient: WebService {
         
         do {
             let result = try decode(type: T.self, from: data)
-            return result
+            return (result, httpResponse.statusCode)
         } catch {
             throw HTTPServiceError.jsonDecoding
         }

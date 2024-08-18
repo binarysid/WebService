@@ -8,6 +8,7 @@ final class WebServiceTests: XCTestCase {
         service = MockAPIClient()
     }
 
+    // this test may fail due to invalid token in http request. the token has validity expiration. check the validity
     func test_post_request() async throws {
         do {
             let result = try await service.postTransaction()

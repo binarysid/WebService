@@ -38,7 +38,8 @@ final class MockAPIClient {
             throw HTTPServiceError.badURL
         }
         do {
-            let carArticle: CarArticleData = try await httpClient.execute(request: request)
+            let (carArticle, statusCode): (CarArticleData, Int) = try await httpClient.execute(request: request)
+            
             return carArticle
         } catch {
             throw error
@@ -46,7 +47,7 @@ final class MockAPIClient {
     }
     
     func postTransaction() async throws -> Post {
-        let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250YWN0X25vIjoiMDE5NDYwOTQzNDIiLCJleHBpcmVzIjoxNzIzOTM5MTk5Ljk5OTk5OX0._7QSeBGQnEbwbHnEsklovO4KbzmpGFbgcfsihYcT_Io"
+        let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250YWN0X25vIjoiMDE5NDYwOTQzNDIiLCJleHBpcmVzIjoxNzI0MDI1NTk5Ljk5OTk5OX0.ZReJJd1ElT_yFSnV1lv_f9TonUzvHJWQnQKPI9xrfjk"
         guard let request = URLRequestBuilder().createRequestWith(
             baseURL: "https://startrek.v2.ltd/grammar-checker",
             httpMethod: .POST,
@@ -56,7 +57,7 @@ final class MockAPIClient {
             throw HTTPServiceError.badURL
         }
         do {
-            let postCont: Post = try await httpClient.execute(request: request)
+            let (postCont,statusCode): (Post,Int) = try await httpClient.execute(request: request)
             return postCont
         } catch {
             throw error
